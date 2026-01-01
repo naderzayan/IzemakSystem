@@ -38,8 +38,12 @@ export default function MainPartyData() {
   const fetchParties = async (page = 1) => {
     setLoading(true);
     try {
+      const token = localStorage.getItem("token");
       const response = await fetch(`${baseUrl}?page=${page}`, {
-        headers: { Accept: "application/json" },
+        headers: {
+          Accept: "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       });
       const data = await response.json();
       const normalized = (data.data || []).map((p) => ({
@@ -56,32 +60,31 @@ export default function MainPartyData() {
   };
 
   const fetchAllParties = async () => {
-  setLoading(true);
-  try {
-    let page = 1;
-    let last = 1;
-    let all = [];
+    setLoading(true);
+    try {
+      let page = 1;
+      let last = 1;
+      let all = [];
 
-    do {
-      const res = await fetch(`${baseUrl}?page=${page}`, {
-        headers: { Accept: "application/json" },
-      });
-      const data = await res.json();
-      all = [...all, ...(data.data || [])];
-      last = data.meta?.last_page || 1;
-      page++;
-    } while (page <= last);
+      do {
+        const res = await fetch(`${baseUrl}?page=${page}`, {
+          headers: { Accept: "application/json" },
+        });
+        const data = await res.json();
+        all = [...all, ...(data.data || [])];
+        last = data.meta?.last_page || 1;
+        page++;
+      } while (page <= last);
 
-    setAllParties(all);
-    return all;
-  } catch (err) {
-    console.error(err);
-    return [];
-  } finally {
-    setLoading(false);
-  }
-};
-
+      setAllParties(all);
+      return all;
+    } catch (err) {
+      console.error(err);
+      return [];
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchEmployees = async () => {
     try {
@@ -132,26 +135,22 @@ export default function MainPartyData() {
     }
   };
 
-const handleSearch = async () => {
-  setSearchPerformed(true);
+  const handleSearch = async () => {
+    setSearchPerformed(true);
 
-  if (!searchTerm.trim()) {
-    fetchParties(currentPage);
-    return;
-  }
+    if (!searchTerm.trim()) {
+      fetchParties(currentPage);
+      return;
+    }
 
-  const data =
-    allParties.length > 0 ? allParties : await fetchAllParties();
+    const data = allParties.length > 0 ? allParties : await fetchAllParties();
 
-  const result = data.filter((party) =>
-    (party.name || "")
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase())
-  );
+    const result = data.filter((party) =>
+      (party.name || "").toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
-  setParties(result);
-};
-
+    setParties(result);
+  };
 
   const goToNextPage = () => {
     if (currentPage < lastPage) setCurrentPage((prev) => prev + 1);

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import Footer from "../components/Footer";
 import { Link } from "react-router";
-import '../style/_hotelDetalies.scss'
+import "../style/_hotelDetalies.scss";
 
 export default function HotelDetalies() {
   const [parties, setParties] = useState([]);
@@ -20,10 +20,14 @@ export default function HotelDetalies() {
 
   const fetchHotelParties = async (hotelId) => {
     try {
+      const token = localStorage.getItem("token");
       const res = await fetch(
         "https://www.izemak.com/azimak/public/api/parties",
         {
-          headers: { Accept: "application/json" },
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       const data = await res.json();
@@ -42,10 +46,15 @@ export default function HotelDetalies() {
 
   return (
     <main className="hotelDetails">
-      <div>
-        <Link to="/">
+      <div className="header">
+        <div>
+          <Link to="/">
+            <button>Log Out</button>
+          </Link>
+        </div>
+        <div>
           <img src="/اعزمك-01.png" alt="logo" />
-        </Link>
+        </div>
       </div>
 
       {loading ? (
