@@ -9,7 +9,6 @@ export default function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("admin");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
@@ -81,29 +80,6 @@ export default function Login() {
             </span>
           </div>
 
-          <div className="roles">
-            <label className="roleOption">
-              <input
-                type="radio"
-                name="role"
-                value="hotel"
-                checked={role === "hotel"}
-                onChange={(e) => setRole(e.target.value)}
-              />
-              <span>Hotel</span>
-            </label>
-
-            <label className="roleOption">
-              <input
-                type="radio"
-                name="role"
-                value="admin"
-                checked={role === "admin"}
-                onChange={(e) => setRole(e.target.value)}
-              />
-              <span>Admin</span>
-            </label>
-          </div>
 
           {error && <p className="error">{error}</p>}
 
