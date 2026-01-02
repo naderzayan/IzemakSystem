@@ -20,7 +20,8 @@ export default function CreateNewParty() {
   useEffect(() => {
     fetch("https://www.izemak.com/azimak/public/api/hotels")
       .then((res) => res.json())
-      .then((data) => setHotels(data.data || []));
+      .then((data) => setHotels(data.data || []))
+      .catch(() => setHotels([]));
   }, []);
 
   const handleSubmit = async (e) => {
@@ -34,9 +35,14 @@ export default function CreateNewParty() {
     formData.append("time", partyDate);
     formData.append("partyInvitationText", invitationText);
     formData.append("party_condition", invitation);
-    formData.append("hotel_id", hotelId);
 
-    if (file) formData.append("invititon", file);
+    if (hotelId) {
+      formData.append("hotel_id", hotelId);
+    }
+
+    if (file) {
+      formData.append("invititon", file);
+    }
 
     try {
       const res = await fetch(
@@ -76,7 +82,9 @@ export default function CreateNewParty() {
           <option value="invitation">ارسال الدعوة فقط</option>
           <option value="invitationWithQuestion">ارسال الدعوة مع السؤال</option>
           <option value="both">ارسال الدعوة ورمز الدخول مع السؤال</option>
-          <option value="bothwithoutQuestion">ارسال الدعوة مع رمز الدخول بدون سؤال</option>
+          <option value="bothwithoutQuestion">
+            ارسال الدعوة مع رمز الدخول بدون سؤال
+          </option>
           <option value="location">ارسال الموقع</option>
           <option value="qr">ارسال رمز الدخول فقط</option>
           <option value="withoutMax">ارسال دعوات بدون عدد دعوات محدد</option>
@@ -109,7 +117,6 @@ export default function CreateNewParty() {
         <select
           value={hotelId}
           onChange={(e) => setHotelId(e.target.value)}
-          required
         >
           <option value="">Choose hotel</option>
           {hotels.map((h) => (
