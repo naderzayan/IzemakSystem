@@ -398,8 +398,8 @@ export default function MainPartyData() {
                       </button>
                       <button className="editBtn">
                         <Link
-                          to="/AddInvitors"
-                          state={{ partyId: party?.id, partyName: party?.name }}
+                          to={`/addinvitors/${party.id}`}
+                          state={{ partyName: party.name, partyId: party.id }}
                         >
                           <FaUserEdit />
                         </Link>

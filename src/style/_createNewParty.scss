@@ -41,8 +41,15 @@
     }
 
     .invitationText {
+      width: 100%;
       min-height: 140px;
+      padding: 10px;
+      padding-inline: 1em;
+      box-sizing: border-box;
       resize: vertical;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
     }
 
     button {

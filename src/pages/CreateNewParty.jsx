@@ -114,10 +114,7 @@ export default function CreateNewParty() {
           required
         />
 
-        <select
-          value={hotelId}
-          onChange={(e) => setHotelId(e.target.value)}
-        >
+        <select value={hotelId} onChange={(e) => setHotelId(e.target.value)}>
           <option value="">Choose hotel</option>
           {hotels.map((h) => (
             <option key={h.id} value={h.id}>
@@ -126,8 +123,7 @@ export default function CreateNewParty() {
           ))}
         </select>
 
-        <input
-          type="text"
+        <textarea
           placeholder="Invitation Text"
           value={invitationText}
           onChange={(e) => setInvitationText(e.target.value)}

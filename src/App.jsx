@@ -26,16 +26,16 @@ export default function App() {
           <Route path="/createnewparty" element={<CreateNewParty />} />
           <Route path="/mainpartydata" element={<MainPartyData />} />
           <Route path="/deletedparties" element={<DeletedParties />} />
-          <Route path="/addinvitors" element={<AddInvitors />} />
-          <Route path="/invitorspage" element={<InvitorsPage />} />
+          <Route path="/addinvitors/:partyId" element={<AddInvitors />} />
+          <Route path="/invitorspage/:partyId" element={<InvitorsPage />} />
           <Route path="/updateinvitor" element={<UpDateInvitor />} />
           <Route path="/qr_code_scanner" element={<QRCodeScanner />} />
           <Route path="/ar_qr_code_scanner" element={<QRCodeScanner />} />
           <Route path="/access_staff" element={<AccessSttaf />} />
           <Route path="/create_employee" element={<CreateEmployee />} />
-          <Route path="/giving_permissions" element={<GivingPermissions/>} />
-          <Route path="/add_a_hotel" element={<AddAHotel/>} />
-          <Route path="/hotel_detalies" element={<HotelDetalies/>} />
+          <Route path="/giving_permissions" element={<GivingPermissions />} />
+          <Route path="/add_a_hotel" element={<AddAHotel />} />
+          <Route path="/hotel_detalies" element={<HotelDetalies />} />
         </Routes>
       </Router>
     </main>

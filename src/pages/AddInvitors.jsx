@@ -285,7 +285,7 @@ export default function AddInvitors() {
       )}
 
       <div className="sideBar">
-        <Link to="/invitorspage" state={{ partyId }}>
+        <Link to={`/invitorspage/${partyId}`} state={{ partyId }}>
           <h1>List of invitees</h1>
         </Link>
         <ul>
