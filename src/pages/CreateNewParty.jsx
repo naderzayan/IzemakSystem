@@ -80,7 +80,7 @@ export default function CreateNewParty() {
           required
         >
           <option value="invitation">ارسال الدعوة فقط</option>
-          <option value="invitationWithQuestion">ارسال الدعوة مع السؤال</option>
+          <option value="invitationWithQuestion">ارسال الدعوة مع السؤال بدون رمز دخول</option>
           <option value="both">ارسال الدعوة ورمز الدخول مع السؤال</option>
           <option value="bothwithoutQuestion">
             ارسال الدعوة مع رمز الدخول بدون سؤال
