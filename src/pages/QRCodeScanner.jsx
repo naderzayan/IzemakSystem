@@ -4,6 +4,7 @@ import { BsQrCodeScan } from "react-icons/bs";
 import { MdOutlineImageSearch } from "react-icons/md";
 import axios from "axios";
 import jsQR from "jsqr";
+import { Link } from "react-router";
 
 export default function QRCodeScanner() {
   const [showImageScan, setShowImageScan] = useState(false);
@@ -371,6 +372,13 @@ export default function QRCodeScanner() {
 
   return (
     <main className="mainOfQRCodeScanner">
+<div>
+  <Link to='/mainpartydata'>
+  <img src="/اعزمك-01.png" alt="logo" />
+  </Link>
+</div>
+
+
       {!scanSuccess ? (
         <div className="scannerContainer">
           <h1>QR Code Reader</h1>

@@ -7,6 +7,7 @@ import { MdDelete } from "react-icons/md";
 import { IoSearchSharp } from "react-icons/io5";
 import { MdRestore } from "react-icons/md";
 import { RiUserSettingsLine } from "react-icons/ri";
+import { MdBarcodeReader } from "react-icons/md";
 import { FaHotel } from "react-icons/fa";
 import Footer from "../components/Footer";
 
@@ -284,6 +285,14 @@ export default function MainPartyData() {
               e.key === "Enter" && (e.preventDefault(), handleSearch())
             }
           />
+        </div>
+        <div>
+          <button className="Btn">
+            <Link to='/qr_code_scanner'>
+              <MdBarcodeReader />
+              <p>Barcode</p>
+            </Link>
+          </button>
         </div>
         <div>
           <button className="Btn">

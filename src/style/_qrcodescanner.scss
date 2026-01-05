@@ -12,6 +12,14 @@ body {
   align-items: center;
   text-align: center;
 
+  img {
+    height: 100px;
+    width: 100px;
+    border: 1px solid #7a6b88;
+    background: #ede9f1;
+    border-radius: 0.5em;
+  }
+
   h1 {
     padding: 1em;
     font-size: larger;
@@ -24,13 +32,13 @@ body {
     align-items: center;
     justify-content: center;
     gap: 1.5em;
-    border: 1px solid #7A6B88;
+    border: 1px solid #7a6b88;
     padding: 2em;
     margin-top: 1em;
     width: 350px;
     max-width: 90vw;
     border-radius: 10px;
-    background: #7A6B88;
+    background: #7a6b88;
     margin-left: auto;
     margin-right: auto;
     transition: all 0.3s ease;
@@ -54,7 +62,7 @@ body {
     cursor: pointer;
   }
 
-    button:hover {
+  button:hover {
     background-color: #dbcce9;
     color: #000;
     border: 1px solid #000;
