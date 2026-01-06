@@ -88,6 +88,8 @@ export default function CreateNewParty() {
           <option value="location">ارسال الموقع</option>
           <option value="qr">ارسال رمز الدخول فقط</option>
           <option value="withoutMax">ارسال دعوات بدون عدد دعوات محدد</option>
+          <option value="publicWithQr">دعوة عامة مع رمز دخول</option>
+          <option value="publicWithoutQr">دعوة عامة بدون رمز دخول</option>
         </select>
 
         <input
