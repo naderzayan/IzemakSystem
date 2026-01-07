@@ -225,7 +225,7 @@ export default function InvitorsPage() {
             </select>
           </div>
           <div className="search">
-            <button onClick={handleSearch}>بحث</button>
+            <button onClick={handleSearch}>search</button>
             <IoIosSearch />
             <input
               type="text"
@@ -312,16 +312,16 @@ export default function InvitorsPage() {
           <div className="confirmBox">
             <p>
               Are you sure to delete{" "}
-              {invitors.filter((invitor) => invitor.selected).length} مدعو
+              {invitors.filter((invitor) => invitor.selected).length} invitor
               {invitors.filter((invitor) => invitor.selected).length !== 1
                 ? ""
                 : ""}
               ؟
             </p>
             <div className="confirmBtns">
-              <button onClick={handleBulkDelete}>نعم</button>
+              <button onClick={handleBulkDelete}>yes</button>
               <button onClick={() => setShowBulkDeleteConfirm(false)}>
-                لا
+                no
               </button>
             </div>
           </div>
