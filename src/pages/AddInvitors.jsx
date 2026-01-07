@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import "../style/_addInvitors.scss";
 import { Link, useLocation } from "react-router-dom";
 import Footer from "../components/Footer";
+import * as XLSX from "xlsx";
 
 export default function AddInvitors() {
   const location = useLocation();
@@ -23,7 +24,10 @@ export default function AddInvitors() {
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   const partyName = location.state?.partyName ?? "";
-  const query = useMemo(() => new URLSearchParams(location.search), [location.search]);
+  const query = useMemo(
+    () => new URLSearchParams(location.search),
+    [location.search]
+  );
   const partyId = location.state?.partyId ?? query.get("partyId");
 
   useEffect(() => {
@@ -33,7 +37,9 @@ export default function AddInvitors() {
     const fetchGuests = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`https://www.izemak.com/azimak/public/api/party/${partyId}`);
+        const res = await fetch(
+          `https://www.izemak.com/azimak/public/api/party/${partyId}`
+        );
         if (!res.ok) throw new Error("No Data Added");
         const data = await res.json();
         const arr = data?.data.members ?? [];
@@ -69,10 +75,13 @@ export default function AddInvitors() {
 
     setSaving(true);
     try {
-      const res = await fetch("https://www.izemak.com/azimak/public/api/addinvitor", {
-        method: "POST",
-        body: formData,
-      });
+      const res = await fetch(
+        "https://www.izemak.com/azimak/public/api/addinvitor",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
       if (!res.ok) throw new Error("error not added");
       window.location.reload();
     } catch (err) {
@@ -86,10 +95,13 @@ export default function AddInvitors() {
     if (!duplicatePayload) return;
     setSaving(true);
     try {
-      const res = await fetch("https://www.izemak.com/azimak/public/api/addinvitor/confirm", {
-        method: "POST",
-        body: duplicatePayload,
-      });
+      const res = await fetch(
+        "https://www.izemak.com/azimak/public/api/addinvitor/confirm",
+        {
+          method: "POST",
+          body: duplicatePayload,
+        }
+      );
       if (!res.ok) throw new Error("error on confirm");
       window.location.reload();
     } catch (err) {
@@ -103,7 +115,29 @@ export default function AddInvitors() {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type: "array" });
+
+      const sheetName = workbook.SheetNames[0];
+      const worksheet = workbook.Sheets[sheetName];
+
+      const excelData = XLSX.utils.sheet_to_json(worksheet);
+
+      const existingPhones = new Set(guests.map((g) => g.phoneNumber));
+
+      const duplicatesList = excelData.filter((p) =>
+        existingPhones.has(p.phoneNumber)
+      );
+
+      setDuplicates(duplicatesList);
+      setExcelCount(excelData.length);
+    };
+
     if (file) {
+      reader.readAsArrayBuffer(file);
       setExcelFile(file);
       setShowExcelConfirm(true);
     }
@@ -111,59 +145,61 @@ export default function AddInvitors() {
 
   const handleExcelUpload = async () => {
     if (!excelFile || !partyId) return;
+
+    if (duplicates.length > 0) {
+      setShowDuplicatesPopup(true);
+      return;
+    }
+
     setSaving(true);
     const formData = new FormData();
     formData.append("Party_id", partyId);
     formData.append("file", excelFile);
 
     try {
-      const res = await fetch("https://www.izemak.com/azimak/public/api/addexcel", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
-      const count = Array.isArray(data.data) ? data.data.length : 0;
-      setExcelCount(count);
-      setShowExcelConfirm(false);
-      setShowExcelCount(true);
+      const res = await fetch(
+        "https://www.izemak.com/azimak/public/api/addexcel",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
     } catch (err) {
       setError(err.message || "error uploading file");
     } finally {
       setSaving(false);
+      setShowExcelConfirm(false);
+      setTimeout(() => {
+        setShowSuccessPopup(false);
+        window.location.reload();
+      }, 3000);
     }
   };
 
   const handleExcelConfirm = async () => {
     if (!excelFile || !partyId) return;
+
     setSaving(true);
-    const formData = new FormData();
-    formData.append("Party_id", partyId);
-    formData.append("file", excelFile);
 
+    const duplicatesList = duplicates.map((d) => ({
+      Party_id: partyId,
+      name: d.Name,
+      phoneNumber: d.phoneNumber,
+      maxScan: d.maxScan,
+    }));
+    console.log(JSON.stringify({ data: duplicatesList }));
     try {
-      const res = await fetch("https://www.izemak.com/azimak/public/api/addexcel", {
-        method: "POST",
-        body: formData,
-      });
-      const data = await res.json();
-
-      if (Array.isArray(data.data)) {
-        const existingPhones = new Set(guests.map((g) => g.phoneNumber));
-        const duplicatesList = data.data.filter((p) => existingPhones.has(p.phoneNumber));
-
-        if (duplicatesList.length > 0) {
-          setDuplicates(duplicatesList);
-          setShowExcelCount(false);
-          setShowDuplicatesPopup(true);
-          setSaving(false);
-          return;
+      const confirmRes = await fetch(
+        "https://www.izemak.com/azimak/public/api/addexcel/confirm",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({ data: duplicatesList }),
         }
-      }
-
-      const confirmRes = await fetch("https://www.izemak.com/azimak/public/api/addexcel/confirm", {
-        method: "POST",
-        body: formData,
-      });
+      );
       const confirmData = await confirmRes.json();
       setShowExcelCount(false);
       setShowSuccessPopup(true);
@@ -185,8 +221,22 @@ export default function AddInvitors() {
           <div className="warningBox">
             <p>The number is duplicated. Do you want to add it?</p>
             <div className="warningActions">
-              <button onClick={handleResendDuplicate} disabled={saving} className="confirmBtn">send</button>
-              <button onClick={() => { setShowDuplicateConfirm(false); setDuplicatePayload(null); }} className="cancelBtn">إلغاء</button>
+              <button
+                onClick={handleResendDuplicate}
+                disabled={saving}
+                className="confirmBtn"
+              >
+                send
+              </button>
+              <button
+                onClick={() => {
+                  setShowDuplicateConfirm(false);
+                  setDuplicatePayload(null);
+                }}
+                className="cancelBtn"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>
@@ -195,10 +245,21 @@ export default function AddInvitors() {
       {showExcelConfirm && (
         <div className="overlay">
           <div className="warningBox">
-            <p>Are you sure?</p>
+            <p>Are you sure</p>
             <div className="warningActions">
-              <button onClick={handleExcelUpload} disabled={saving} className="confirmBtn">إرسال</button>
-              <button onClick={() => setShowExcelConfirm(false)} className="cancelBtn">إلغاء</button>
+              <button
+                onClick={() => setShowExcelCount(true)}
+                disabled={saving}
+                className="confirmBtn"
+              >
+                send
+              </button>
+              <button
+                onClick={() => setShowExcelConfirm(false)}
+                className="cancelBtn"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>
@@ -207,10 +268,21 @@ export default function AddInvitors() {
       {showExcelCount && (
         <div className="overlay">
           <div className="warningBox">
-            <p>Number of invitees : {excelCount ?? "?"}</p>
+            <p>Number of invitees : {excelCount ?? "0"}</p>
             <div className="warningActions">
-              <button onClick={handleExcelConfirm} disabled={saving} className="confirmBtn">إرسال</button>
-              <button onClick={() => setShowExcelCount(false)} className="cancelBtn">إلغاء</button>
+              <button
+                onClick={handleExcelUpload}
+                disabled={saving}
+                className="confirmBtn"
+              >
+                send
+              </button>
+              <button
+                onClick={() => setShowExcelCount(false)}
+                className="cancelBtn"
+              >
+                Cancel
+              </button>
             </div>
           </div>
         </div>
@@ -222,7 +294,9 @@ export default function AddInvitors() {
             <p>There are duplicate numbers:</p>
             <ul>
               {duplicates.map((d, idx) => (
-                <li key={idx}>{d.name} - {d.phoneNumber}</li>
+                <li key={idx}>
+                  {d.Name} - {d.phoneNumber}
+                </li>
               ))}
             </ul>
             <div className="warningActions">
@@ -231,23 +305,7 @@ export default function AddInvitors() {
                 onClick={async () => {
                   setSaving(true);
                   try {
-                    const formData = new FormData();
-                    formData.append("Party_id", partyId);
-                    formData.append("file", excelFile);
-                    const confirmRes = await fetch("https://www.izemak.com/azimak/public/api/addexcel/confirm", {
-                      method: "POST",
-                      body: formData,
-                    });
-                    const confirmData = await confirmRes.json();
-                    console.log(" forced confirm:", confirmData);
-
-                    setShowDuplicatesPopup(false);
-                    setShowSuccessPopup(true);
-                    setTimeout(() => {
-                      setShowSuccessPopup(false);
-                      window.location.reload();
-                    }, 1000);
-
+                    handleExcelConfirm();
                   } catch (err) {
                     setError(err.message || "error");
                   } finally {
@@ -313,26 +371,48 @@ export default function AddInvitors() {
 
         <div className="name">
           <label>name</label>
-          <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
         </div>
 
         <div className="phoneNum">
           <label>phone number</label>
-          <input type="number" value={phone} onChange={(e) => setPhone(e.target.value)} />
+          <input
+            type="number"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+          />
         </div>
 
         <div className="numOfInvitations">
           <label>Number of invitations</label>
-          <input type="number" value={invites} onChange={(e) => setInvites(e.target.value)} />
+          <input
+            type="number"
+            value={invites}
+            onChange={(e) => setInvites(e.target.value)}
+          />
         </div>
 
         <div className="buttons">
           <div className="addButton">
-            <button onClick={handleAddGuest} disabled={saving}>Add</button>
+            <button onClick={handleAddGuest} disabled={saving}>
+              Add
+            </button>
           </div>
           <div className="addButton">
-            <label htmlFor="fileUpload" className="uploadBtn">Upload a file</label>
-            <input type="file" id="fileUpload" className="inputUpload" onChange={handleFileChange} />
+            <label htmlFor="fileUpload" className="uploadBtn">
+              Upload a file
+            </label>
+            <input
+              type="file"
+              id="fileUpload"
+              accept=".xlsx,.xls"
+              className="inputUpload"
+              onChange={handleFileChange}
+            />
           </div>
         </div>
         <Footer />
