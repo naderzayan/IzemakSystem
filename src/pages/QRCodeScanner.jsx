@@ -384,8 +384,8 @@ export default function QRCodeScanner() {
           <h1>QR Code Reader</h1>
 
           {!showImageScan && (
-            <div className="scanCard centerCard">
-              <BsQrCodeScan size={60} />
+            <div className="scanCard">
+              <BsQrCodeScan />
               <div
                 style={{
                   display: "flex",
@@ -428,7 +428,7 @@ export default function QRCodeScanner() {
 
           {showImageScan && (
             <div className="scanCard centerCard">
-              <MdOutlineImageSearch size={60} />
+              <MdOutlineImageSearch/>
               <div
                 className={`drop-zone ${isDragging ? "dragging" : ""}`}
                 onDragOver={(e) => {

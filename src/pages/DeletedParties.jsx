@@ -10,26 +10,31 @@ const BASE_URL = "https://www.izemak.com/azimak/public/api";
 export default function DeletedParties() {
   const [deleted, setDeleted] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
+
   const [selectedParty, setSelectedParty] = useState(null);
   const [showModal, setShowModal] = useState(false);
-
-  useEffect(() => {
-    fetchDeleted();
-  }, []);
-
-  const getId = (party) =>
-    party.id ?? party.party_id ?? party.partyId ?? party.id_party ?? null;
 
   const axiosInstance = axios.create({
     baseURL: BASE_URL,
   });
 
-  const fetchDeleted = async () => {
+  useEffect(() => {
+    fetchDeleted(currentPage);
+  }, [currentPage]);
+
+  const getId = (party) =>
+    party.id ?? party.party_id ?? party.partyId ?? party.id_party ?? null;
+
+  const fetchDeleted = async (page = 1) => {
     setLoading(true);
     try {
-      const res = await axiosInstance.get("/parties/deleted");
-      const list = res.data?.data ?? res.data;
-      setDeleted(Array.isArray(list) ? list.reverse() : []);
+      const res = await axiosInstance.get(`/parties/deleted?page=${page}`);
+      const list = res.data?.data ?? [];
+      setDeleted(Array.isArray(list) ? list : []);
+      setLastPage(res.data?.meta?.last_page || 1);
     } catch (err) {
       console.error("Failed to load deleted parties:", err);
       setDeleted([]);
@@ -50,7 +55,7 @@ export default function DeletedParties() {
 
     try {
       await axiosInstance.get(`/party/restore/${id}`);
-      await fetchDeleted();
+      fetchDeleted(currentPage);
     } catch (err) {
       console.error("Restore error:", err);
     } finally {
@@ -64,15 +69,54 @@ export default function DeletedParties() {
     setSelectedParty(null);
   };
 
+  /* ---------- Pagination Logic (Same as MainPartyData) ---------- */
+
+  const goToNextPage = () => {
+    if (currentPage < lastPage) {
+      setCurrentPage((prev) => prev + 1);
+    }
+  };
+
+  const goToPrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prev) => prev - 1);
+    }
+  };
+
+  const renderPageNumbers = () => {
+    const pages = [];
+    const maxPagesToShow = 5;
+
+    let startPage = Math.max(
+      1,
+      currentPage - Math.floor(maxPagesToShow / 2)
+    );
+    let endPage = Math.min(lastPage, startPage + maxPagesToShow - 1);
+
+    if (endPage - startPage < maxPagesToShow - 1) {
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(
+        <button
+          key={i}
+          onClick={() => setCurrentPage(i)}
+          className={`pageNumber ${i === currentPage ? "active" : ""}`}
+        >
+          {i}
+        </button>
+      );
+    }
+    return pages;
+  };
+
   return (
     <main className="mainOfMainPartyData">
       <div className="addParty">
-        <button className="Btn">
-          <Link to="/mainpartydata">Return to the home page</Link>
-        </button>
         <div>
           <Link to="/mainpartydata">
-            <img src="/اعزمك-01.png" alt="" />
+            <img src="/اعزمك-01.png" alt="logo" />
           </Link>
         </div>
       </div>
@@ -115,12 +159,31 @@ export default function DeletedParties() {
         </tbody>
       </table>
 
+      {/* ---------- Pagination UI ---------- */}
+      <div className="pages">
+        {currentPage > 1 && (
+          <button className="prev" onClick={goToPrevPage}>
+            Previous
+          </button>
+        )}
+
+        {renderPageNumbers()}
+
+        <button
+          className="next"
+          onClick={goToNextPage}
+          disabled={currentPage === lastPage}
+        >
+          Next
+        </button>
+      </div>
+
       {showModal && (
         <div className="modalOverlay">
           <div className="modalBox">
-            <p>Do you want to retrieve this party</p>
+            <p>Do you want to retrieve this party?</p>
             <div className="modalActions">
-              <button className="cancelBtn" onClick={handleConfirmRestore}>
+              <button className="confirmBtn" onClick={handleConfirmRestore}>
                 Restore
               </button>
               <button className="cancelBtn" onClick={handleCancel}>

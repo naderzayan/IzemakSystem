@@ -165,7 +165,7 @@
   }
 
   .employeeItem {
-    padding: 6px 8px;
+    padding: 1em;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -392,9 +392,7 @@
   gap: 15px;
 }
 
-/* =======================
-   Tablet
-======================= */
+
 @media (max-width: 1199px) {
   .addParty {
     flex-wrap: wrap;
@@ -417,9 +415,7 @@
   }
 }
 
-/* =======================
-   Mobile
-======================= */
+
 @media (max-width: 767px) {
   .addParty {
     flex-direction: column;
