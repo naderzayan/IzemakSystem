@@ -120,3 +120,53 @@
     transform: rotate(360deg);
   }
 }
+
+@media (min-width: 768px) {
+  .mainOfCreateNewParty {
+    padding: 2.5rem;
+
+    h1 {
+      font-size: 1.6rem;
+    }
+
+    .formContainer {
+      gap: 1.2rem;
+
+      input,
+      select,
+      textarea {
+        font-size: 1rem;
+        height: 3.2rem;
+      }
+
+      .invitationText {
+        min-height: 160px;
+      }
+    }
+  }
+}
+
+@media (min-width: 1024px) {
+  .mainOfCreateNewParty {
+    padding: 3rem;
+
+    img {
+      height: 110px;
+      width: 110px;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+    }
+
+    .formContainer {
+      max-width: 600px;
+      gap: 1.4rem;
+
+      button {
+        font-size: 1.05rem;
+        padding: 1rem;
+      }
+    }
+  }
+}

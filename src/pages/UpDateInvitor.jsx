@@ -45,7 +45,7 @@ export default function UpDateInvitor() {
 
     return (
         <main className="mainOfUpDateInvitor">
-            <Link to="/invitorspage" state={{ partyId: invitor?.Party_id }}>
+            <Link to="/invitorspage/:partyId" state={{ partyId: invitor?.Party_id }}>
                 <img src="اعزمك-01.png" alt="" />
             </Link>
 

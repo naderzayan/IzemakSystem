@@ -391,3 +391,125 @@
   justify-content: center;
   gap: 15px;
 }
+
+/* =======================
+   Tablet
+======================= */
+@media (max-width: 1199px) {
+  .addParty {
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: center;
+
+    img {
+      height: 80px;
+      width: 80px;
+    }
+
+    .search {
+      width: 100%;
+      justify-content: center;
+
+      input {
+        width: 70%;
+      }
+    }
+  }
+}
+
+/* =======================
+   Mobile
+======================= */
+@media (max-width: 767px) {
+  .addParty {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+
+    .Btn,
+    .accessbtn {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .search {
+      width: 100%;
+
+      input {
+        width: 100%;
+      }
+
+      svg {
+        transform: none;
+      }
+    }
+
+    img {
+      margin: auto;
+      height: 70px;
+      width: 70px;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .partyTable {
+    border: none;
+
+    thead {
+      display: none;
+    }
+
+    tbody tr {
+      display: block;
+      margin-bottom: 1rem;
+      border: 1px solid #7A6B88;
+      border-radius: 10px;
+      padding: 1rem;
+      background: #fff;
+    }
+
+    tbody td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: none;
+      padding: 0.5rem 0;
+      text-align: right;
+      font-size: 14px;
+    }
+
+    tbody td::before {
+      content: attr(data-label);
+      font-weight: bold;
+      color: #7A6B88;
+    }
+
+    td:last-child {
+      justify-content: center;
+      gap: 1rem;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .pages {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+
+    button {
+      padding: 0.4rem 0.7rem;
+      font-size: 14px;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .modal {
+    width: 90%;
+    max-width: none;
+  }
+}
+

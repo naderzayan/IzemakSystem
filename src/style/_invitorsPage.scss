@@ -241,3 +241,164 @@
   }
 }
 
+
+@media (max-width: 1024px) {
+  .invitorsPage {
+    padding: 15px;
+
+    .pageHeader .actions {
+      gap: 3em;
+      flex-wrap: wrap;
+      justify-content: center;
+
+      .search {
+        width: 100%;
+        justify-content: center;
+        input {
+          width: 70%;
+        }
+      }
+
+      select {
+        width: 150px;
+      }
+    }
+
+    .invitorsTable {
+      font-size: 14px;
+      th, td {
+        padding: 6px;
+      }
+    }
+  }
+
+  .bottomActions {
+    right: 10px;
+    gap: 12px;
+
+    svg {
+      font-size: 18px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .invitorsPage {
+    padding: 10px;
+
+    .pageHeader .actions {
+      flex-direction: column;
+      gap: 1em;
+
+      .search {
+        width: 100%;
+        input {
+          width: 100%;
+        }
+      }
+
+      select {
+        width: 100%;
+      }
+    }
+
+    .invitorsTable {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+      font-size: 12px;
+
+      th, td {
+        white-space: nowrap;
+        padding: 8px;
+      }
+    }
+  }
+
+  .bottomActions {
+    top: auto;
+    bottom: 20px;
+    right: 50%;
+    transform: translateX(50%);
+    flex-direction: row;
+    gap: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 5px 10px;
+    border-radius: 10px;
+
+    svg {
+      font-size: 18px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .invitorsPage {
+    .invitorsTable {
+      font-size: 11px;
+
+      th, td {
+        padding: 6px;
+      }
+    }
+
+    .pageHeader .actions {
+      gap: 0.5em;
+    }
+  }
+
+  .bottomActions {
+    gap: 8px;
+    svg {
+      font-size: 16px;
+    }
+  }
+}
+
+@media (max-width: 1024px) {
+  .invitorsTable {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .invitorsTable {
+    display: block;
+    width: 100%;
+
+    thead {
+      display: none;
+    }
+
+    tbody {
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+    }
+
+    tr {
+      display: block;
+      background: #fff;
+      border-radius: 10px;
+      padding: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      border: 1px solid #ccc;
+
+      td {
+        display: flex;
+        justify-content: space-between;
+        padding: 5px 0;
+        border: none;
+        font-size: 14px;
+
+        &:before {
+          content: attr(data-label);
+          font-weight: bold;
+          text-transform: capitalize;
+        }
+      }
+    }
+  }
+}

@@ -106,62 +106,84 @@ export default function InvitorsPage() {
     );
   };
 
-  const handleCheckboxChange = (id) => {
+const handleCheckboxChange = (id) => {
+  setInvitors((prev) => {
+    const updated = prev.map((item) =>
+      item.id === id ? { ...item, selected: !item.selected } : item
+    );
+
+    const anySelected = updated.some((item) => item.selected);
+    const allSelected =
+      filteredInvitors.length > 0 &&
+      filteredInvitors.every((f) =>
+        updated.find((i) => i.id === f.id)?.selected
+      );
+
+    setShowActionBtns(anySelected);
+    setSelectAll(allSelected);
+
+    return updated;
+  });
+};
+
+
+const handleBulkDelete = async () => {
+  const invitorsToDelete = invitors.filter(
+    (invitor) => invitor.selected
+  );
+
+  if (invitorsToDelete.length === 0) return;
+
+  try {
+    for (const invitor of invitorsToDelete) {
+      await fetch(`${baseUrl}/deleteinvitor/${invitor.id}`, {
+        method: "DELETE",
+      });
+    }
+
     setInvitors((prev) =>
-      prev.map((item) =>
-        item.id === id ? { ...item, selected: !item.selected } : item
+      prev.filter(
+        (item) => !invitorsToDelete.some((d) => d.id === item.id)
       )
     );
-  };
+  } catch (err) {
+    console.error("Bulk delete error:", err);
+  } finally {
+    setShowBulkDeleteConfirm(false);
+    setShowActionBtns(false);
+    setSelectAll(false);
+  }
+};
 
-  const handleBulkDelete = async () => {
-    const invitorsToDelete = filteredInvitors.filter(
-      (invitor) => invitor.selected
+
+const handleChangeStatus = async () => {
+  const selectedInvitors = invitors.filter((item) => item.selected);
+
+  if (selectedInvitors.length === 0) return;
+
+  try {
+    for (const invitor of selectedInvitors) {
+      await fetch(`${baseUrl}/updateinvitor/${invitor.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: newStatus.toLowerCase() }),
+      });
+    }
+
+    setInvitors((prev) =>
+      prev.map((item) =>
+        item.selected
+          ? { ...item, status: newStatus.toLowerCase() }
+          : item
+      )
     );
+  } catch (err) {
+    console.error("Change status error:", err);
+  } finally {
+    setShowChangeStatusBox(false);
+  }
+};
 
-    if (invitorsToDelete.length === 0) {
-      return;
-    }
-
-    try {
-      for (const invitor of invitorsToDelete) {
-        await fetch(`${baseUrl}/deleteinvitor/${invitor.id}`, {
-          method: "DELETE",
-        });
-      }
-
-      setInvitors((prev) =>
-        prev.filter(
-          (item) => !invitorsToDelete.some((del) => del.id === item.id)
-        )
-      );
-    } catch (err) {
-      console.error("Bulk delete error:", err);
-    } finally {
-      setShowBulkDeleteConfirm(false);
-      setShowActionBtns(false);
-      setSelectAll(false);
-    }
-  };
-
-  const handleChangeStatus = async () => {
-    try {
-      for (const invitor of invitors) {
-        await fetch(`${baseUrl}/updateinvitor/${invitor.id}`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ status: newStatus.toLowerCase() }),
-        });
-      }
-      setInvitors((prev) =>
-        prev.map((item) => ({ ...item, status: newStatus.toLowerCase() }))
-      );
-    } catch (err) {
-      console.error("Change status error:", err);
-    } finally {
-      setShowChangeStatusBox(false);
-    }
-  };
 
   const handleExportExcel = () => {
     const dataForExcel = invitors.map((item) => ({
