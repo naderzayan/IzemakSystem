@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import "../style/_addInvitors.scss";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 import Footer from "../components/Footer";
 import * as XLSX from "xlsx";
 
@@ -22,14 +22,15 @@ export default function AddInvitors() {
   const [showDuplicatesPopup, setShowDuplicatesPopup] = useState(false);
   const [duplicates, setDuplicates] = useState([]);
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [partyName, setPartyName] = useState("");
 
-  const partyName = location.state?.partyName ?? "";
+  const params = useParams();
   const query = useMemo(
     () => new URLSearchParams(location.search),
     [location.search]
   );
-  const partyId = location.state?.partyId ?? query.get("partyId");
-
+  let partyId = location.state?.partyId ?? query.get("partyId");
+  if (!partyId) partyId = params.partyId;
   useEffect(() => {
     if (!partyId) return;
     let cancelled = false;
@@ -43,6 +44,7 @@ export default function AddInvitors() {
         if (!res.ok) throw new Error("No Data Added");
         const data = await res.json();
         const arr = data?.data.members ?? [];
+        setPartyName(data?.data.name);
         if (!cancelled) setGuests(arr);
       } catch (err) {
         if (!cancelled) setError(err.message || "error");

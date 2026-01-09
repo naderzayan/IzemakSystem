@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 import "../style/_invitorsPage.scss";
 import { FaUserEdit, FaFileExcel, FaFilePdf, FaEdit } from "react-icons/fa";
 import { MdDelete, MdOutlineDeleteSweep } from "react-icons/md";
@@ -27,9 +27,11 @@ export default function InvitorsPage() {
 
   const [showChangeStatusBox, setShowChangeStatusBox] = useState(false);
   const [newStatus, setNewStatus] = useState("Invited");
+  const params = useParams();
 
   const baseUrl = "https://www.izemak.com/azimak/public/api";
-  const partyId = location.state?.partyId;
+  let partyId = location.state?.partyId;
+  if (!partyId) partyId = params.partyId;
 
   const fetchInvitors = async () => {
     setLoading(true);
@@ -106,84 +108,76 @@ export default function InvitorsPage() {
     );
   };
 
-const handleCheckboxChange = (id) => {
-  setInvitors((prev) => {
-    const updated = prev.map((item) =>
-      item.id === id ? { ...item, selected: !item.selected } : item
-    );
-
-    const anySelected = updated.some((item) => item.selected);
-    const allSelected =
-      filteredInvitors.length > 0 &&
-      filteredInvitors.every((f) =>
-        updated.find((i) => i.id === f.id)?.selected
+  const handleCheckboxChange = (id) => {
+    setInvitors((prev) => {
+      const updated = prev.map((item) =>
+        item.id === id ? { ...item, selected: !item.selected } : item
       );
 
-    setShowActionBtns(anySelected);
-    setSelectAll(allSelected);
+      const anySelected = updated.some((item) => item.selected);
+      const allSelected =
+        filteredInvitors.length > 0 &&
+        filteredInvitors.every(
+          (f) => updated.find((i) => i.id === f.id)?.selected
+        );
 
-    return updated;
-  });
-};
+      setShowActionBtns(anySelected);
+      setSelectAll(allSelected);
 
+      return updated;
+    });
+  };
 
-const handleBulkDelete = async () => {
-  const invitorsToDelete = invitors.filter(
-    (invitor) => invitor.selected
-  );
+  const handleBulkDelete = async () => {
+    const invitorsToDelete = invitors.filter((invitor) => invitor.selected);
 
-  if (invitorsToDelete.length === 0) return;
+    if (invitorsToDelete.length === 0) return;
 
-  try {
-    for (const invitor of invitorsToDelete) {
-      await fetch(`${baseUrl}/deleteinvitor/${invitor.id}`, {
-        method: "DELETE",
-      });
+    try {
+      for (const invitor of invitorsToDelete) {
+        await fetch(`${baseUrl}/deleteinvitor/${invitor.id}`, {
+          method: "DELETE",
+        });
+      }
+
+      setInvitors((prev) =>
+        prev.filter((item) => !invitorsToDelete.some((d) => d.id === item.id))
+      );
+    } catch (err) {
+      console.error("Bulk delete error:", err);
+    } finally {
+      setShowBulkDeleteConfirm(false);
+      setShowActionBtns(false);
+      setSelectAll(false);
     }
+  };
 
-    setInvitors((prev) =>
-      prev.filter(
-        (item) => !invitorsToDelete.some((d) => d.id === item.id)
-      )
-    );
-  } catch (err) {
-    console.error("Bulk delete error:", err);
-  } finally {
-    setShowBulkDeleteConfirm(false);
-    setShowActionBtns(false);
-    setSelectAll(false);
-  }
-};
+  const handleChangeStatus = async () => {
+    const selectedInvitors = invitors.filter((item) => item.selected);
 
-
-const handleChangeStatus = async () => {
-  const selectedInvitors = invitors.filter((item) => item.selected);
-
-  if (selectedInvitors.length === 0) return;
-
-  try {
-    for (const invitor of selectedInvitors) {
-      await fetch(`${baseUrl}/updateinvitor/${invitor.id}`, {
+    if (selectedInvitors.length === 0) return;
+    const ids = selectedInvitors.map((i) => i.id);
+    try {
+      await fetch(`${baseUrl}/invitors/status`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status: newStatus.toLowerCase() }),
+        body: JSON.stringify({
+          ids: ids,
+          status: newStatus.toLowerCase(),
+        }),
       });
+
+      setInvitors((prev) =>
+        prev.map((item) =>
+          item.selected ? { ...item, status: newStatus.toLowerCase() } : item
+        )
+      );
+    } catch (err) {
+      console.error("Change status error:", err);
+    } finally {
+      setShowChangeStatusBox(false);
     }
-
-    setInvitors((prev) =>
-      prev.map((item) =>
-        item.selected
-          ? { ...item, status: newStatus.toLowerCase() }
-          : item
-      )
-    );
-  } catch (err) {
-    console.error("Change status error:", err);
-  } finally {
-    setShowChangeStatusBox(false);
-  }
-};
-
+  };
 
   const handleExportExcel = () => {
     const dataForExcel = invitors.map((item) => ({
@@ -367,9 +361,7 @@ const handleChangeStatus = async () => {
               </select>
             </div>
             <div className="confirmBtns">
-              <button onClick={handleChangeStatus}>
-                update
-                </button>
+              <button onClick={handleChangeStatus}>update</button>
               <button onClick={() => setShowChangeStatusBox(false)}>
                 cancel
               </button>

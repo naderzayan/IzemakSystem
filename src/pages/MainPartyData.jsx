@@ -276,7 +276,6 @@ export default function MainPartyData() {
           <button className="Btn" onClick={handleSearch}>
             search
           </button>
-          <IoSearchSharp />
           <input
             type="search"
             value={searchTerm}
