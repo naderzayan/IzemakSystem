@@ -34,7 +34,7 @@ export default function MainPartyData() {
   const [openDropdownIndex, setOpenDropdownIndex] = useState(null);
   const [addingIndex, setAddingIndex] = useState(null);
 
-  const baseUrl = "https://www.izemak.com/azimak/public/api/parties";
+  const baseUrl = "https://www.izemak.com/azimak/public/api/parties/list";
 
   const fetchParties = async (page = 1) => {
     setLoading(true);
