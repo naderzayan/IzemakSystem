@@ -13,24 +13,22 @@
   margin-bottom: 1rem;
 
   .Btn {
-    background-color: #7A6B88;
-    color: #fff;
-    border: none;
+    background-color: #dbcce9;
+    border: 1px  solid #7A6B88;
     padding: 0.5rem 1rem;
     border-radius: 5px;
     cursor: pointer;
 
     a {
-      color: #fff;
+      color: #000;
       text-decoration: none;
     }
   }
   .Btn:hover {
-    background-color: #dbcce9;
-    color: #000;
+    background-color: #7A6B88;
     border: 1px solid #000;
     a {
-      color: #000;
+      color: #fff;
     }
   }
 
@@ -159,12 +157,14 @@
 
 .deleteBtn {
   background: none;
+  border: none;
   svg {
     color: #d6b1f8;
   }
 }
 .deleteBtn:hover {
   background: none;
+  border: none;
   svg {
     color: #7A6B88;
   }

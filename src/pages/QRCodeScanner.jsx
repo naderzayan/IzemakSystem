@@ -5,6 +5,7 @@ import { MdOutlineImageSearch } from "react-icons/md";
 import axios from "axios";
 import jsQR from "jsqr";
 import { Link } from "react-router";
+import QrScanner from "../components/QrScanner";
 
 export default function QRCodeScanner() {
   const [showImageScan, setShowImageScan] = useState(false);
@@ -69,10 +70,12 @@ export default function QRCodeScanner() {
         )}`
       );
       if (res.status === 200 && res.data) {
-        // normalize values
         const apiData = res.data.data || {};
         const scanCount = parseInt(apiData.scan ?? apiData.scans ?? 0, 10);
-        const maxScan = parseInt(apiData.maxScan ?? apiData.max_scan ?? apiData.max ?? 0, 10);
+        const maxScan = parseInt(
+          apiData.maxScan ?? apiData.max_scan ?? apiData.max ?? 0,
+          10
+        );
 
         setScanData({
           name: apiData.name ?? "Not found",
@@ -82,7 +85,11 @@ export default function QRCodeScanner() {
           raw: apiData,
         });
 
-        if (!Number.isNaN(maxScan) && !Number.isNaN(scanCount) && scanCount >= maxScan) {
+        if (
+          !Number.isNaN(maxScan) &&
+          !Number.isNaN(scanCount) &&
+          scanCount >= maxScan
+        ) {
           setScanSuccess(false);
           setError("you reached max scan limit");
           return;
@@ -372,16 +379,21 @@ export default function QRCodeScanner() {
 
   return (
     <main className="mainOfQRCodeScanner">
-<div>
-  <Link to='/mainpartydata'>
-  <img src="/اعزمك-01.png" alt="logo" />
-  </Link>
-</div>
-
+      <div className="logo">
+        <Link to="/mainpartydata">
+          <img src="/اعزمك-01.png" alt="logo" />
+        </Link>
+      </div>
 
       {!scanSuccess ? (
         <div className="scannerContainer">
-          <h1>QR Code Reader</h1>
+          <QrScanner
+            disabled={scanSuccess}
+            onSubmit={async (code) => {
+              setScannedText(code);
+              return await callScanApi(code);
+            }}
+          />
 
           {!showImageScan && (
             <div className="scanCard">
@@ -428,7 +440,7 @@ export default function QRCodeScanner() {
 
           {showImageScan && (
             <div className="scanCard centerCard">
-              <MdOutlineImageSearch/>
+              <MdOutlineImageSearch />
               <div
                 className={`drop-zone ${isDragging ? "dragging" : ""}`}
                 onDragOver={(e) => {

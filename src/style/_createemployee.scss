@@ -1,5 +1,5 @@
 .mainOfCreateEmployee {
-    min-height: 100vh;
+    min-height: 120vh;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -23,7 +23,7 @@
 
 h1 {
     text-align: center;
-    padding: 1em;
+    padding: .5em;
     color: #000;
     font-size: 20px;
     font-weight: 800;
@@ -38,7 +38,7 @@ h1 {
 
 .form {
     border: 1px solid #7a6b88;
-    padding: 2em;
+    padding: 1em;
     background: #7a6b88;
     border-radius: .5em;
 }
