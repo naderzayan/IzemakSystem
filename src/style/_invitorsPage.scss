@@ -42,7 +42,7 @@
 
       input {
         border: 1px solid #000;
-        padding: 8px 12px;
+        padding: 1em;
         padding-inline-start: 2em;
         border-radius: 0.5em;
         height: 2.5em;
@@ -103,9 +103,8 @@
 
     .icons {
       display: flex;
-      justify-content: center;
+      justify-content: space-evenly;
       align-items: center;
-      gap: 2em;
     
       .deleteBtn {
         border: none;
@@ -128,6 +127,9 @@
         svg:hover {
           color: #7a6b88;
         }
+      }
+      .box {
+        font-size: 5px;
       }
     }
   }

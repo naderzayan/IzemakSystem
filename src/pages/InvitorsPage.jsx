@@ -280,22 +280,29 @@ export default function InvitorsPage() {
                   <td>{invitor.status}</td>
                   <td>
                     <div className="icons">
-                      <button
-                        className="deleteBtn"
-                        onClick={() => handleDeleteClick(invitor)}
-                      >
-                        <MdDelete />
-                      </button>
-                      <button className="editBtn">
-                        <Link to="/updateinvitor" state={invitor}>
-                          <FaUserEdit />
-                        </Link>
-                      </button>
-                      <input
-                        type="checkbox"
-                        checked={invitor.selected}
-                        onChange={() => handleCheckboxChange(invitor.id)}
-                      />
+                      <div>
+                        <button
+                          className="deleteBtn"
+                          onClick={() => handleDeleteClick(invitor)}
+                        >
+                          <MdDelete />
+                        </button>
+                      </div>
+                      <div>
+                        <button className="editBtn">
+                          <Link to="/updateinvitor" state={invitor}>
+                            <FaUserEdit />
+                          </Link>
+                        </button>
+                      </div>
+                      <div>
+                        <input
+                          type="checkbox"
+                          className="box"
+                          checked={invitor.selected}
+                          onChange={() => handleCheckboxChange(invitor.id)}
+                        />
+                      </div>
                     </div>
                   </td>
                 </tr>
