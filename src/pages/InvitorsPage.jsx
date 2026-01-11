@@ -129,19 +129,20 @@ export default function InvitorsPage() {
   };
 
   const handleBulkDelete = async () => {
-    const invitorsToDelete = invitors.filter((invitor) => invitor.selected);
+    const invitorsToDeleteIds = invitors
+      .filter((invitor) => invitor.selected)
+      .map((i) => i.id);
 
-    if (invitorsToDelete.length === 0) return;
+    if (invitorsToDeleteIds.length === 0) return;
 
     try {
-      for (const invitor of invitorsToDelete) {
-        await fetch(`${baseUrl}/deleteinvitor/${invitor.id}`, {
-          method: "DELETE",
-        });
-      }
-
+      await fetch(`${baseUrl}/invitors/delete`, {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: invitorsToDeleteIds }),
+      });
       setInvitors((prev) =>
-        prev.filter((item) => !invitorsToDelete.some((d) => d.id === item.id))
+        prev.filter((item) => !invitorsToDeleteIds.some((d) => d === item.id))
       );
     } catch (err) {
       console.error("Bulk delete error:", err);
