@@ -16,6 +16,7 @@ export default function CreateNewParty() {
   const [hotelId, setHotelId] = useState("");
   const [hotels, setHotels] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [locationLink, setLocationLink] = useState("");
 
   useEffect(() => {
     fetch("https://www.izemak.com/azimak/public/api/hotels")
@@ -31,7 +32,10 @@ export default function CreateNewParty() {
     const formData = new FormData();
     formData.append("name", partyName);
     formData.append("address", partyPlace);
-    formData.append("location", "");
+    formData.append(
+      "location",
+      invitation === "location" ? locationLink : ""
+    );
     formData.append("time", partyDate);
     formData.append("partyInvitationText", invitationText);
     formData.append("party_condition", invitation);
@@ -80,7 +84,9 @@ export default function CreateNewParty() {
           required
         >
           <option value="invitation">ارسال الدعوة فقط</option>
-          <option value="invitationWithQuestion">ارسال الدعوة مع السؤال بدون رمز دخول</option>
+          <option value="invitationWithQuestion">
+            ارسال الدعوة مع السؤال بدون رمز دخول
+          </option>
           <option value="both">ارسال الدعوة ورمز الدخول مع السؤال</option>
           <option value="bothwithoutQuestion">
             ارسال الدعوة مع رمز الدخول بدون سؤال
@@ -89,7 +95,9 @@ export default function CreateNewParty() {
           <option value="qr">ارسال رمز الدخول فقط</option>
           <option value="withoutMax">ارسال دعوات بدون عدد دعوات محدد</option>
           <option value="publicWithQr">دعوة عامة مع رمز دخول</option>
-          <option value="publicWithoutQr">دعوة عامة بدون رمز دخول</option>
+          <option value="publicWithoutQr">
+            دعوة عامة بدون رمز دخول
+          </option>
         </select>
 
         <input
@@ -124,6 +132,16 @@ export default function CreateNewParty() {
             </option>
           ))}
         </select>
+
+        {invitation === "location" && (
+          <input
+            type="text"
+            placeholder="Enter location link"
+            value={locationLink}
+            onChange={(e) => setLocationLink(e.target.value)}
+            required
+          />
+        )}
 
         <textarea
           placeholder="Invitation Text"
