@@ -32,10 +32,7 @@ export default function CreateNewParty() {
     const formData = new FormData();
     formData.append("name", partyName);
     formData.append("address", partyPlace);
-    formData.append(
-      "location",
-      invitation === "location" ? locationLink : ""
-    );
+    formData.append("location", invitation === "location" ? locationLink : "");
     formData.append("time", partyDate);
     formData.append("partyInvitationText", invitationText);
     formData.append("party_condition", invitation);
@@ -54,7 +51,7 @@ export default function CreateNewParty() {
         {
           method: "POST",
           body: formData,
-        }
+        },
       );
 
       if (res.ok) {
@@ -95,9 +92,7 @@ export default function CreateNewParty() {
           <option value="qr">ارسال رمز الدخول فقط</option>
           <option value="withoutMax">ارسال دعوات بدون عدد دعوات محدد</option>
           <option value="publicWithQr">دعوة عامة مع رمز دخول</option>
-          <option value="publicWithoutQr">
-            دعوة عامة بدون رمز دخول
-          </option>
+          <option value="publicWithoutQr">دعوة عامة بدون رمز دخول</option>
         </select>
 
         <input
@@ -108,9 +103,9 @@ export default function CreateNewParty() {
           required
         />
 
+
         <input
-          type="text"
-          placeholder="Party Time"
+          type="date"
           value={partyDate}
           onChange={(e) => setPartyDate(e.target.value)}
           required

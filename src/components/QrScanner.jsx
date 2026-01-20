@@ -61,7 +61,10 @@ export default function QrScanner({ onSubmit, disabled }) {
   };
 
   return (
-    <main>
+    <main className="inputs">
+      <select>
+        <option value=""></option>
+      </select>
       <input
         type="text"
         inputMode="text"

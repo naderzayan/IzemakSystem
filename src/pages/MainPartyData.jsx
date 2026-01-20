@@ -91,7 +91,7 @@ export default function MainPartyData() {
     try {
       const res = await fetch(
         "https://www.izemak.com/azimak/public/api/employees",
-        { headers: { Accept: "application/json" } }
+        { headers: { Accept: "application/json" } },
       );
       if (!res.ok) throw new Error("no employees API");
       const data = await res.json();
@@ -147,7 +147,7 @@ export default function MainPartyData() {
     const data = allParties.length > 0 ? allParties : await fetchAllParties();
 
     const result = data.filter((party) =>
-      (party.name || "").toLowerCase().includes(searchTerm.toLowerCase())
+      (party.name || "").toLowerCase().includes(searchTerm.toLowerCase()),
     );
 
     setParties(result);
@@ -179,12 +179,12 @@ export default function MainPartyData() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({ id: editPartyId, name: editPartyName }),
-        }
+        },
       );
       const data = await response.json();
       if (data.success || response.ok) {
         const updated = parties.map((p) =>
-          p.id === editPartyId ? { ...p, name: editPartyName } : p
+          p.id === editPartyId ? { ...p, name: editPartyName } : p,
         );
         setParties(updated);
         setShowEditModal(false);
@@ -210,7 +210,7 @@ export default function MainPartyData() {
           className={`pageNumber ${i === currentPage ? "active" : ""}`}
         >
           {i}
-        </button>
+        </button>,
       );
     }
     return pages;
@@ -247,8 +247,8 @@ export default function MainPartyData() {
           prev.map((p) =>
             p.id === partyId
               ? { ...p, employees: [...p.employees, employee] }
-              : p
-          )
+              : p,
+          ),
         );
         setOpenDropdownIndex(null);
       } else {
@@ -287,7 +287,7 @@ export default function MainPartyData() {
         </div>
         <div>
           <button className="Btn">
-            <Link to='/qr_code_scanner'>
+            <Link to="/qr_code_scanner">
               <MdBarcodeReader />
               <p>Barcode</p>
             </Link>
