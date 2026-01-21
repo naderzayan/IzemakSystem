@@ -1,8 +1,10 @@
 import React, { useState } from "react";
+import axios from "axios";
 import "../style/components/_qrScanner.scss";
 
 export default function QrScanner({ onSubmit, disabled }) {
   const [value, setValue] = useState("");
+  const [error, setError] = useState("");
 
   async function callScanApi(scanned) {
     setError("");
