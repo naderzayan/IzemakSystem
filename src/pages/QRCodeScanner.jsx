@@ -412,7 +412,7 @@ export default function QRCodeScanner() {
           value={selectedParty}
           onChange={(e) => setSelectedParty(e.target.value)}
           style={{ marginBottom: 20 }}
-        >          
+        >
           {parties.map((party) => (
             <option key={party.id} value={party.id}>
               {party.name}
