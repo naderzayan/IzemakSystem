@@ -8,7 +8,8 @@ import { Link } from "react-router";
 import QrScanner from "../components/QrScanner";
 
 export default function QRCodeScanner() {
-  const [selectedParty, setSelectedParty] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [selectedParties, setSelectedParty] = useState([]);
   const [showImageScan, setShowImageScan] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -86,12 +87,15 @@ export default function QRCodeScanner() {
 
   async function callScanApi(scanned) {
     setError("");
-    try {
-      const res = await axios.get(
-        `https://www.izemak.com/azimak/public/api/scan/${encodeURIComponent(
+    try {      
+      const res =  await fetch(`${baseUrl}/scan/${encodeURIComponent(
           scanned,
-        )}`,
-      );
+        )}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids: selectedParties }),
+      });
+      
       if (res.status === 200 && res.data) {
         const apiData = res.data.data || {};
         const scanCount = parseInt(apiData.scan ?? apiData.scans ?? 0, 10);
@@ -326,7 +330,12 @@ export default function QRCodeScanner() {
       streamRef.current = null;
     }
   }
-
+  function partiesChange(value) {
+    console.log(selectedParties);
+    let parties = [...selectedParties, value];
+    setSelectedParty(parties);
+    console.log(selectedParties);
+  }
   function scanVideoFrame() {
     const video = videoRef.current;
     const canvas = canvasRef.current;
@@ -399,7 +408,11 @@ export default function QRCodeScanner() {
       setError("Failed to capture/scan image");
     }
   };
-
+  const toggleOption = (id) => {
+    setSelectedParty((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
+    );
+  };
   return (
     <main className="mainOfQRCodeScanner">
       <div className="logo">
@@ -408,20 +421,29 @@ export default function QRCodeScanner() {
         </Link>
       </div>
       {!scanSuccess && (
-        <div className="selecte_party">
-          <select
-            multiple
-            value={selectedParty}
-            onChange={(e) => setSelectedParty(e.target.value)}
-            style={{ marginBottom: 20 }}
-            className="select_selecte_party"
-          >
-            {parties.map((party) => (
-              <option key={party.id} value={party.id}>
-                {party.name}
-              </option>
-            ))}
-          </select>
+        <div className="dropdown-container">
+          {/* Button */}
+          <div className="dropdown-header" onClick={() => setOpen(!open)}>
+            {selectedParties.length > 0
+              ? `${selectedParties.length} selected`
+              : "Select parties"}
+          </div>
+
+          {/* Dropdown */}
+          {open && (
+            <div className="dropdown-menu">
+              {parties.map((party) => (
+                <label key={party.id} className="dropdown-item">
+                  <input
+                    type="checkbox"
+                    checked={selectedParties.includes(party.id)}
+                    onChange={() => toggleOption(party.id)}
+                  />
+                  {party.name}
+                </label>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
