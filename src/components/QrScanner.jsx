@@ -19,7 +19,7 @@ export default function QrScanner({ onSubmit, selectedParty }) {
         <>
           <input
             type="text"
-            placeholder="Scan QR Code"
+            placeholder="Write QR Code here"
             value={value}
             onChange={(e) => setValue(e.target.value)}
             onKeyDown={handleKeyDown}

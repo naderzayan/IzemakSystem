@@ -8,7 +8,7 @@ import { Link } from "react-router";
 import QrScanner from "../components/QrScanner";
 
 export default function QRCodeScanner() {
-  const [selectedParty, setSelectedParty] = useState("0");
+  const [selectedParty, setSelectedParty] = useState([]);
   const [showImageScan, setShowImageScan] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -410,9 +410,11 @@ export default function QRCodeScanner() {
       {!scanSuccess && (
         <div className="selecte_party">
           <select
+            multiple
             value={selectedParty}
             onChange={(e) => setSelectedParty(e.target.value)}
             style={{ marginBottom: 20 }}
+            className="select_selecte_party"
           >
             {parties.map((party) => (
               <option key={party.id} value={party.id}>
