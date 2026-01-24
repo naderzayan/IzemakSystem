@@ -407,19 +407,21 @@ export default function QRCodeScanner() {
           <img src="/اعزمك-01.png" alt="logo" />
         </Link>
       </div>
-      <div className="selecte_party">
-        <select
-          value={selectedParty}
-          onChange={(e) => setSelectedParty(e.target.value)}
-          style={{ marginBottom: 20 }}
-        >
-          {parties.map((party) => (
-            <option key={party.id} value={party.id}>
-              {party.name}
-            </option>
-          ))}
-        </select>
-      </div>
+      {!scanSuccess && (
+        <div className="selecte_party">
+          <select
+            value={selectedParty}
+            onChange={(e) => setSelectedParty(e.target.value)}
+            style={{ marginBottom: 20 }}
+          >
+            {parties.map((party) => (
+              <option key={party.id} value={party.id}>
+                {party.name}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
 
       {!scanSuccess ? (
         <div className="scannerContainer">
