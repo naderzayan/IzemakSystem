@@ -405,7 +405,7 @@ export default function InvitorsPage() {
           <ImCheckmark2 />
         </button>
         <button className="addInvitorBtn">
-          <Link to="/addinvitors" state={{ partyId }}>
+          <Link to={`/addinvitors/${partyId}`} state={{ partyId }}>
             <IoMdPersonAdd />
           </Link>
         </button>
