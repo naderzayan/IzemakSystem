@@ -365,7 +365,7 @@ export default function AddInvitors() {
       </div>
 
       <div className="addDetailis">
-        <Link to="/mainpartydata">
+        <Link to={`/invitorspage/${partyId}`} state={{ partyId }}>
           <img src="/اعزمك-01.png" alt="" />
         </Link>
         {error && <p className="error">{error}</p>}
