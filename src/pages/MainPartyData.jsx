@@ -246,10 +246,11 @@ export default function MainPartyData() {
         setParties((prev) =>
           prev.map((p) =>
             p.id === partyId
-              ? { ...p, employees: [...p.employees, employee] }
+              ? { ...p, employees: [employee] } // واحد بس
               : p,
           ),
         );
+
         setOpenDropdownIndex(null);
       } else {
         console.error("Add employee failed:", data);
@@ -360,17 +361,21 @@ export default function MainPartyData() {
                     <td>{party.address}</td>
 
                     <td className="employeeCell">
-                      {party.employee?.length > 0 ? (
+                      <button
+                        className="AddEmployee"
+                        onClick={() => toggleDropdown(index)}
+                      >
+                        Add Employee
+                      </button>
+
+                      {party.employees?.length > 0 && (
                         <div className="assignedList">
-                          <span className="assignedItem">{party.employee}</span>
+                          {party.employees.map((emp) => (
+                            <span key={emp.id} className="assignedItem">
+                              {emp.name}
+                            </span>
+                          ))}
                         </div>
-                      ) : (
-                        <button
-                          className="AddEmployee"
-                          onClick={() => toggleDropdown(index)}
-                        >
-                          Add Employee
-                        </button>
                       )}
 
                       {openDropdownIndex === index && (
