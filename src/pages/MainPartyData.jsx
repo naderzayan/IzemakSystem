@@ -4,7 +4,6 @@ import "../style/_mainPartyData.scss";
 import { FaUserEdit, FaRegEdit } from "react-icons/fa";
 import { GiPartyPopper } from "react-icons/gi";
 import { MdDelete } from "react-icons/md";
-import { IoSearchSharp } from "react-icons/io5";
 import { MdRestore } from "react-icons/md";
 import { RiUserSettingsLine } from "react-icons/ri";
 import { MdBarcodeReader } from "react-icons/md";
@@ -246,7 +245,7 @@ export default function MainPartyData() {
         setParties((prev) =>
           prev.map((p) =>
             p.id === partyId
-              ? { ...p, employees: [employee] } // واحد بس
+              ? { ...p, employees: [employee] }
               : p,
           ),
         );
