@@ -11,8 +11,10 @@ export default function CreateEmployee() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
-  const addEmployeeUrl = "https://www.izemak.com/azimak/public/api/employees/add";
+  const addEmployeeUrl =
+    "https://www.izemak.com/azimak/public/api/employees/add";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,11 +49,15 @@ export default function CreateEmployee() {
         navigate("/access_staff");
       } else {
         console.error("Add employee failed:", data);
-        alert("Failed to add employee. Check console for details.");
+
+        if (data?.message?.toLowerCase().includes("email")) {
+          setErrorMsg("The email has already been taken.");
+        } else {
+          setErrorMsg("The email has been taken");
+        }
       }
     } catch (err) {
       console.error("Add employee error:", err);
-      alert("An error occurred while adding employee.");
     } finally {
       setSubmitting(false);
     }
@@ -71,22 +77,38 @@ export default function CreateEmployee() {
         <div className="form">
           <div className="inputs">
             <label>Name</label>
-            <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
           </div>
 
           <div className="inputs">
             <label>Phone Number</label>
-            <input type="tel" value={tel} onChange={(e) => setTel(e.target.value)} />
+            <input
+              type="tel"
+              value={tel}
+              onChange={(e) => setTel(e.target.value)}
+            />
           </div>
 
           <div className="inputs">
             <label>Email</label>
-            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
 
           <div className="inputs">
             <label>Password</label>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
           </div>
 
           <div className="btnContainer">
@@ -96,6 +118,15 @@ export default function CreateEmployee() {
           </div>
         </div>
       </form>
+
+      {errorMsg && (
+        <div className="popup-overlay">
+          <div className="popup">
+            <p>{errorMsg}</p>
+            <button onClick={() => setErrorMsg("")}>OK</button>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>
