@@ -221,7 +221,7 @@ export default function MainPartyData() {
 
   const addEmployeeToParty = async (partyId, employee) => {
     const party = parties.find((p) => p.id === partyId);
-    if (party?.employees?.some((e) => e.id === employee.id)) {
+    if (party?.employee === employee.name) {
       setOpenDropdownIndex(null);
       alert(`${employee.name} Already in the party`);
       return;
@@ -245,7 +245,7 @@ export default function MainPartyData() {
         setParties((prev) =>
           prev.map((p) =>
             p.id === partyId
-              ? { ...p, employees: [employee] }
+              ? { ...p, employee: employee.name }
               : p,
           ),
         );
@@ -367,13 +367,11 @@ export default function MainPartyData() {
                         Add Employee
                       </button>
 
-                      {party.employees?.length > 0 && (
-                        <div className="assignedList">
-                          {party.employees.map((emp) => (
-                            <span key={emp.id} className="assignedItem">
-                              {emp.name}
-                            </span>
-                          ))}
+                      {party.employee != null && (
+                        <div className="assignedList">                          
+                            <span className="assignedItem">
+                              {party.employee}
+                            </span>                         
                         </div>
                       )}
 

@@ -87,15 +87,16 @@ export default function QRCodeScanner() {
 
   async function callScanApi(scanned) {
     setError("");
-    try {      
-      const res =  await fetch(`${baseUrl}/scan/${encodeURIComponent(
-          scanned,
-        )}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ ids: selectedParties }),
-      });
-      
+    try {
+      const res = await fetch(
+        `${baseUrl}/scan/${encodeURIComponent(scanned)}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ids: selectedParties }),
+        },
+      );
+
       if (res.status === 200 && res.data) {
         const apiData = res.data.data || {};
         const scanCount = parseInt(apiData.scan ?? apiData.scans ?? 0, 10);
@@ -454,108 +455,6 @@ export default function QRCodeScanner() {
               return await callScanApi(code);
             }}
           />
-
-          {!showImageScan && (
-            <div className="scanCard">
-              <BsQrCodeScan />
-              <div
-                style={{
-                  display: "flex",
-                  gap: 8,
-                  flexDirection: "column",
-                  alignItems: "center",
-                }}
-              >
-                {devices.length > 1 && (
-                  <select
-                    value={selectedDeviceId}
-                    onChange={(e) => setSelectedDeviceId(e.target.value)}
-                    style={{ marginBottom: 8 }}
-                  >
-                    <option value="">Use default / environment</option>
-                    {devices.map((d) => (
-                      <option key={d.deviceId} value={d.deviceId}>
-                        {d.label || `Camera ${d.deviceId}`}
-                      </option>
-                    ))}
-                  </select>
-                )}
-
-                {!cameraActive ? (
-                  <button onClick={startCamera}>Start Camera Scan</button>
-                ) : (
-                  <button onClick={stopCamera}>Stop Camera</button>
-                )}
-                <button
-                  onClick={() => {
-                    setShowImageScan(true);
-                    setCameraActive(false);
-                  }}
-                >
-                  Scan an Image File
-                </button>
-              </div>
-            </div>
-          )}
-
-          {showImageScan && (
-            <div className="scanCard centerCard">
-              <MdOutlineImageSearch />
-              <div
-                className={`drop-zone ${isDragging ? "dragging" : ""}`}
-                onDragOver={(e) => {
-                  e.preventDefault();
-                  setIsDragging(true);
-                }}
-                onDragLeave={() => setIsDragging(false)}
-                onDrop={(e) => {
-                  e.preventDefault();
-                  setIsDragging(false);
-                  handleFileSelect({ target: { files: e.dataTransfer.files } });
-                }}
-              >
-                {!selectedImage ? (
-                  <div>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      ref={fileInputRef}
-                      onChange={handleFileSelect}
-                      style={{ display: "none" }}
-                    />
-                    <button onClick={handleChooseImageClick}>
-                      Choose Image
-                    </button>
-                    <p>Or drop an image to scan</p>
-                  </div>
-                ) : (
-                  <div className="preview">
-                    <p>Image ready to scan</p>
-                    <div>
-                      <button
-                        onClick={() => {
-                          try {
-                            if (
-                              selectedImage &&
-                              selectedImage.startsWith("blob:")
-                            ) {
-                              URL.revokeObjectURL(selectedImage);
-                            }
-                          } catch (e) {}
-                          setSelectedImage(null);
-                        }}
-                      >
-                        Clear
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-              <button onClick={() => setShowImageScan(false)}>
-                Back to Camera
-              </button>
-            </div>
-          )}
           {cameraActive && (
             <div style={{ marginTop: 12 }}>
               <div className="cameraPreview">
@@ -618,6 +517,107 @@ export default function QRCodeScanner() {
               </div>
             </div>
           )}
+          {showImageScan && (
+            <div className="scanCard centerCard">
+              <MdOutlineImageSearch />
+              <div
+                className={`drop-zone ${isDragging ? "dragging" : ""}`}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setIsDragging(true);
+                }}
+                onDragLeave={() => setIsDragging(false)}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  setIsDragging(false);
+                  handleFileSelect({ target: { files: e.dataTransfer.files } });
+                }}
+              >
+                {!selectedImage ? (
+                  <div>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      ref={fileInputRef}
+                      onChange={handleFileSelect}
+                      style={{ display: "none" }}
+                    />
+                    <button onClick={handleChooseImageClick}>
+                      Choose Image
+                    </button>
+                    <p>Or drop an image to scan</p>
+                  </div>
+                ) : (
+                  <div className="preview">
+                    <p>Image ready to scan</p>
+                    <div>
+                      <button
+                        onClick={() => {
+                          try {
+                            if (
+                              selectedImage &&
+                              selectedImage.startsWith("blob:")
+                            ) {
+                              URL.revokeObjectURL(selectedImage);
+                            }
+                          } catch (e) {}
+                          setSelectedImage(null);
+                        }}
+                      >
+                        Clear
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+              <button onClick={() => setShowImageScan(false)}>
+                Back to Camera
+              </button>
+            </div>
+          )}
+          {!showImageScan && (
+            <div className="scanCard">
+              <BsQrCodeScan />
+              <div
+                style={{
+                  display: "flex",
+                  gap: 8,
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                {devices.length > 1 && (
+                  <select
+                    value={selectedDeviceId}
+                    onChange={(e) => setSelectedDeviceId(e.target.value)}
+                    style={{ marginBottom: 8 }}
+                  >
+                    <option value="">Use default / environment</option>
+                    {devices.map((d) => (
+                      <option key={d.deviceId} value={d.deviceId}>
+                        {d.label || `Camera ${d.deviceId}`}
+                      </option>
+                    ))}
+                  </select>
+                )}
+
+                {!cameraActive ? (
+                  <button onClick={startCamera}>Start Camera Scan</button>
+                ) : (
+                  <button onClick={stopCamera}>Stop Camera</button>
+                )}
+                <button
+                  onClick={() => {
+                    setShowImageScan(true);
+                    setCameraActive(false);
+                  }}
+                >
+                  Scan an Image File
+                </button>
+              </div>
+            </div>
+          )}
+
           <canvas ref={canvasRef} style={{ display: "none" }} />
 
           {error && (
