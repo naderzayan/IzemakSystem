@@ -422,14 +422,12 @@ export default function QRCodeScanner() {
       </div>
       {!scanSuccess && (
         <div className="dropdown-container">
-          {/* Button */}
           <div className="dropdown-header" onClick={() => setOpen(!open)}>
             {selectedParties.length > 0
               ? `${selectedParties.length} selected`
               : "Select parties"}
           </div>
 
-          {/* Dropdown */}
           {open && (
             <div className="dropdown-menu">
               {parties.map((party) => (
