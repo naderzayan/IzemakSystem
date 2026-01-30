@@ -97,8 +97,9 @@ export default function QRCodeScanner() {
         },
       );
 
-      if (res.status === 200 && res.data) {
-        const apiData = res.data.data || {};
+      if (res.status === 200) {
+        const data = await res.json();
+        const apiData = data.data || {};
         const scanCount = parseInt(apiData.scan ?? apiData.scans ?? 0, 10);
         const maxScan = parseInt(
           apiData.maxScan ?? apiData.max_scan ?? apiData.max ?? 0,
