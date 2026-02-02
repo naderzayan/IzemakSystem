@@ -350,9 +350,9 @@ export default function AddInvitors() {
         </Link>
         <ul>
           {loading ? (
-            <p className="loading">Loading...</p>
+            <p className="loading">Loading</p>
           ) : !Array.isArray(guests) || guests.length === 0 ? (
-            <p>No data yet...</p>
+            <p>No data yet</p>
           ) : (
             guests.map((guest, idx) => (
               <li key={idx}>
@@ -365,7 +365,8 @@ export default function AddInvitors() {
       </div>
 
       <div className="addDetailis">
-        <Link to={`/invitorspage/${partyId}`} state={{ partyId }}>
+        
+        <Link to="/mainpartydata">
           <img src="/اعزمك-01.png" alt="" />
         </Link>
         {error && <p className="error">{error}</p>}

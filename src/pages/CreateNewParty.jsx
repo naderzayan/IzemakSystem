@@ -155,7 +155,7 @@ export default function CreateNewParty() {
         </label>
 
         <button type="submit" disabled={loading}>
-          {loading ? "Loading..." : "Add Party"}
+          {"Add Party"}
         </button>
       </form>
 
