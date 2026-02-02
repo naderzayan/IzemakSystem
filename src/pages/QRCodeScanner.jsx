@@ -117,7 +117,7 @@ export default function QRCodeScanner() {
         if (
           !Number.isNaN(maxScan) &&
           !Number.isNaN(scanCount) &&
-          scanCount >= maxScan
+          scanCount > maxScan
         ) {
           setScanSuccess(false);
           setError("you reached max scan limit");
