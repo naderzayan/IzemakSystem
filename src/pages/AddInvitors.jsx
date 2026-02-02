@@ -27,7 +27,7 @@ export default function AddInvitors() {
   const params = useParams();
   const query = useMemo(
     () => new URLSearchParams(location.search),
-    [location.search]
+    [location.search],
   );
   let partyId = location.state?.partyId ?? query.get("partyId");
   if (!partyId) partyId = params.partyId;
@@ -39,7 +39,7 @@ export default function AddInvitors() {
       setLoading(true);
       try {
         const res = await fetch(
-          `https://www.izemak.com/azimak/public/api/party/${partyId}`
+          `https://www.izemak.com/azimak/public/api/party/${partyId}`,
         );
         if (!res.ok) throw new Error("No Data Added");
         const data = await res.json();
@@ -82,7 +82,7 @@ export default function AddInvitors() {
         {
           method: "POST",
           body: formData,
-        }
+        },
       );
       if (!res.ok) throw new Error("error not added");
       window.location.reload();
@@ -102,7 +102,7 @@ export default function AddInvitors() {
         {
           method: "POST",
           body: duplicatePayload,
-        }
+        },
       );
       if (!res.ok) throw new Error("error on confirm");
       window.location.reload();
@@ -126,16 +126,24 @@ export default function AddInvitors() {
       const sheetName = workbook.SheetNames[0];
       const worksheet = workbook.Sheets[sheetName];
 
-      const excelData = XLSX.utils.sheet_to_json(worksheet);
+      const excelData = XLSX.utils.sheet_to_json(worksheet, {
+        header: 1,
+      });
+
+      const formattedData = excelData.map((row) => ({
+        name: row[0],
+        phoneNumber: row[1],
+        maxScan: row[2],
+      }));
 
       const existingPhones = new Set(guests.map((g) => g.phoneNumber));
 
-      const duplicatesList = excelData.filter((p) =>
-        existingPhones.has(p.phoneNumber)
+      const duplicatesList = formattedData.filter((p) =>
+        existingPhones.has(p.phoneNumber),
       );
 
       setDuplicates(duplicatesList);
-      setExcelCount(excelData.length);
+      setExcelCount(formattedData.length);
     };
 
     if (file) {
@@ -164,7 +172,7 @@ export default function AddInvitors() {
         {
           method: "POST",
           body: formData,
-        }
+        },
       );
     } catch (err) {
       setError(err.message || "error uploading file");
@@ -185,7 +193,7 @@ export default function AddInvitors() {
 
     const duplicatesList = duplicates.map((d) => ({
       Party_id: partyId,
-      name: d.Name,
+      name: d.name,
       phoneNumber: d.phoneNumber,
       maxScan: d.maxScan,
     }));
@@ -200,7 +208,7 @@ export default function AddInvitors() {
             Accept: "application/json",
           },
           body: JSON.stringify({ data: duplicatesList }),
-        }
+        },
       );
       const confirmData = await confirmRes.json();
       setShowExcelCount(false);
@@ -297,7 +305,7 @@ export default function AddInvitors() {
             <ul>
               {duplicates.map((d, idx) => (
                 <li key={idx}>
-                  {d.Name} - {d.phoneNumber}
+                  {d.name} - {d.phoneNumber}
                 </li>
               ))}
             </ul>
@@ -365,7 +373,6 @@ export default function AddInvitors() {
       </div>
 
       <div className="addDetailis">
-        
         <Link to="/mainpartydata">
           <img src="/اعزمك-01.png" alt="" />
         </Link>
