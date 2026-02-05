@@ -364,7 +364,7 @@ export default function AddInvitors() {
           ) : (
             guests.map((guest, idx) => (
               <li key={idx}>
-                <span>{guest.name}</span>
+                <span>{idx+1}-{guest.name}</span>
                 <span>{guest.status ?? ""}</span>
               </li>
             ))

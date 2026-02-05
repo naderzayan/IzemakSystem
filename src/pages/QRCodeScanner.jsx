@@ -115,9 +115,10 @@ export default function QRCodeScanner() {
         });
 
         if (
+          data.msg == "Max scan limit reached" &&
           !Number.isNaN(maxScan) &&
           !Number.isNaN(scanCount) &&
-          scanCount > maxScan
+          scanCount >= maxScan
         ) {
           setScanSuccess(false);
           setError("you reached max scan limit");
@@ -423,8 +424,8 @@ export default function QRCodeScanner() {
         </Link>
       </div>
       {!scanSuccess && (
-        <div className="dropdown-container">
-          <div className="dropdown-header" onClick={() => setOpen(!open)}>
+        <div className="dropdown_container">
+          <div className="dropdown_header" onClick={() => setOpen(!open)}>
             {selectedParties.length > 0
               ? `${selectedParties.length} selected`
               : "Select parties"}

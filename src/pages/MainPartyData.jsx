@@ -67,8 +67,12 @@ export default function MainPartyData() {
       let all = [];
 
       do {
+        const token = localStorage.getItem("token");
         const res = await fetch(`${baseUrl}?page=${page}`, {
-          headers: { Accept: "application/json" },
+          headers: {
+            Accept: "application/json",
+            Authorization: `Bearer ${token}`,
+          },
         });
         const data = await res.json();
         all = [...all, ...(data.data || [])];
@@ -106,6 +110,7 @@ export default function MainPartyData() {
   };
 
   useEffect(() => {
+    //fetchAllParties();
     fetchParties(currentPage);
     fetchEmployees();
   }, [currentPage]);
@@ -244,9 +249,7 @@ export default function MainPartyData() {
       if (res.ok || data.success) {
         setParties((prev) =>
           prev.map((p) =>
-            p.id === partyId
-              ? { ...p, employee: employee.name }
-              : p,
+            p.id === partyId ? { ...p, employee: employee.name } : p,
           ),
         );
 
@@ -368,10 +371,8 @@ export default function MainPartyData() {
                       </button>
 
                       {party.employee != null && (
-                        <div className="assignedList">                          
-                            <span className="assignedItem">
-                              {party.employee}
-                            </span>                         
+                        <div className="assignedList">
+                          <span className="assignedItem">{party.employee}</span>
                         </div>
                       )}
 
