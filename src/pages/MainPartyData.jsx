@@ -144,6 +144,7 @@ export default function MainPartyData() {
     setSearchPerformed(true);
 
     if (!searchTerm.trim()) {
+      setSearchPerformed(false); // رجّع pagination
       fetchParties(currentPage);
       return;
     }
@@ -434,21 +435,23 @@ export default function MainPartyData() {
             </tbody>
           </table>
 
-          <div className="pages">
-            {currentPage > 5 && (
-              <button className="prev" onClick={goToPrevPage}>
-                Previous
+          {!searchPerformed && (
+            <div className="pages">
+              {currentPage > 5 && (
+                <button className="prev" onClick={goToPrevPage}>
+                  Previous
+                </button>
+              )}
+              {renderPageNumbers()}
+              <button
+                className="next"
+                onClick={goToNextPage}
+                disabled={currentPage === lastPage}
+              >
+                Next
               </button>
-            )}
-            {renderPageNumbers()}
-            <button
-              className="next"
-              onClick={goToNextPage}
-              disabled={currentPage === lastPage}
-            >
-              Next
-            </button>
-          </div>
+            </div>
+          )}
         </>
       )}
 
