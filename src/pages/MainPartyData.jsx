@@ -110,7 +110,6 @@ export default function MainPartyData() {
   };
 
   useEffect(() => {
-    //fetchAllParties();
     fetchParties(currentPage);
     fetchEmployees();
   }, [currentPage]);
@@ -140,23 +139,46 @@ export default function MainPartyData() {
     }
   };
 
-  const handleSearch = async () => {
-    setSearchPerformed(true);
+  const searchUrl =
+  "https://www.izemak.com/azimak/public/api/searchparty";
 
-    if (!searchTerm.trim()) {
-      setSearchPerformed(false); // رجّع pagination
-      fetchParties(currentPage);
-      return;
-    }
 
-    const data = allParties.length > 0 ? allParties : await fetchAllParties();
+const handleSearch = async () => {
+  const term = searchTerm.trim();
 
-    const result = data.filter((party) =>
-      (party.name || "").toLowerCase().includes(searchTerm.toLowerCase()),
-    );
+  if (!term) {
+    setSearchPerformed(false);
+    setCurrentPage(1);
+    fetchParties(1);
+    return;
+  }
 
-    setParties(result);
-  };
+  setLoading(true);
+  setSearchPerformed(true);
+
+  try {
+    const token = localStorage.getItem("token");
+
+    const res = await fetch(`${searchUrl}/${encodeURIComponent(term)}`, {
+      headers: {
+        Accept: "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const data = await res.json();
+
+    const results = Array.isArray(data.data) ? data.data : data;
+
+    setParties(results || []);
+  } catch (error) {
+    console.error("Search error:", error);
+    setParties([]);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const goToNextPage = () => {
     if (currentPage < lastPage) setCurrentPage((prev) => prev + 1);
